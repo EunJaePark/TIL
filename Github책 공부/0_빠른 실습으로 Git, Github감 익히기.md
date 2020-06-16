@@ -137,7 +137,7 @@
 
   [iTshirt-oct](새로 생성한 폴더) 속에 [iTshirt](다운받는 커밋)폴더가 새로 생성되고 그 안에 README파일과 [.git]폴더가 생겨 폴더 구조가 복잡해진다.
 
-- 새로 생성한 클론 폴더([iTshirt-oct])에서 README파일을 수정하고 ```$ git add 파일명```, ```$ git commit -m "메세지"```를 해주면
+- 새로 생성한 클론 폴더([iTshirt-oct])에서 README파일을 수정하고 ```$ git add 파일명```, ```$ git commit -m "메세지"``` 후, ```$ git push origin master```(원격저장소에 푸시)해주면
 
   push한 커밋이 GitHub의 원격저장소(iTshirt)에 올라가 있는 것을 확인할 수 있다.
   
