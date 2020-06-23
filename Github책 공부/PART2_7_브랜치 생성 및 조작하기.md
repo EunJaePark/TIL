@@ -105,38 +105,38 @@
 	 
 	 (mybranch1)$ git branch   # 현재브랜치 확인
 		 ----> master
-	           * mybranch1
-	           ===> mybranch1으로 체크아웃해줘서 *표시가 mybranch1앞으로 옮겨진 상태
+	           	* mybranch1
+	           	===> mybranch1으로 체크아웃해줘서 *표시가 mybranch1앞으로 옮겨진 상태
 	           
 	 (mybranch1)$ git log --oneline --all   # HEAD 변경 확인
 		 ----> 2ec7e32 (HEAD -> mybranch1, origin/master, master) 두 번째 커밋
-	           b6e1657 첫 번째 커밋
+	           	b6e1657 첫 번째 커밋
 
 	 (mybranch1)$ cat file1.txt   # 파일 내용 확인
 		 ----> hello git
-	           second
+	           	second
 	 (mybranch1)$ echo "third - my branch" >> file1.txt   # 파일에 내용 추가
 
 	 (mybranch1)$ car file1.txt   # 변경 내용 확인
 		 ----> hello git
-	           second
-	           third - my branch
+	           	second
+	           	third - my branch
 
 	 (mybranch1)$ git status   # 스테이지 상태 확인
 		 ----> On branch mybranch1
-			   Changes not staged for commit:
-			      (use "git add <file>..." to update what will be committed)
-			      (use "git checkout -- <file>..." to discard changes in working directory)
+			Changes not staged for commit:
+			   (use "git add <file>..." to update what will be committed)
+			   (use "git checkout -- <file>..." to discard changes in working directory)
 
-					   modified: file1.txt
+					modified: file1.txt
 
-			    no changes added to commit (use "git add" and/or "git commit -a")
+			 no changes added to commit (use "git add" and/or "git commit -a")
 
 	 (mybranch1)$ git add file1.txt   # 스테이지에 변경사항 추가
 
 	 (mybranch1)$ git commit   # 커밋
 		 ----> [mybranch1 0c8e721] mybranch1의 첫 번째 커밋
-	           1 file changed, 1 insertion(+)
+	                1 file changed, 1 insertion(+)
 
 	 (mybranch1)$ git log --oneline --all   # 변경된 브랜치 확인
 		 ----> 0c8e721 (HEAD -> mybranch1) mybranch1의 첫 번째 커밋
@@ -154,61 +154,61 @@
 
 	 (mybranch1)$ cat file1.txt   # 파일 내용 확인
 		 ---> hello git
-			  second
-			  third - my branch
-			  four - my branch
+		      second
+		      third - my branch
+		      four - my branch
 
 	 (mybranch1)$ git status   # 스테이지 상태 확인
 		 ----> On branch mybranch1
-			   Changes not staged for commit:
-			      (use "git add <file>..." to update what will be committed)
-			      (use "git checkout -- <file>..." to discard changes in working directory)	  
+			Changes not staged for commit:
+			   (use "git add <file>..." to update what will be committed)
+			   (use "git checkout -- <file>..." to discard changes in working directory)	  
 
-			           modified: file1.txt
+			        modified: file1.txt
 
-			   no changes added to commit (use "git add" and/or "git commit -a")
+			no changes added to commit (use "git add" and/or "git commit -a")
 
 	 (mybranch1)$ git add file1.txt   # 스테이지에 추가
 
 	 (mybranch1)$ git commit   # 신규 커밋 추가
 		 ----> [mybranch1 ea16908] 두 번째 커밋
-			   1 file changed, 1 insertion(+)
+			1 file changed, 1 insertion(+)
 
 	 (mybranch1)$ git log --oneline --all --graph   # 커밋 로그 보기
 		----> * ea16908 (HEAD -> mybranch1) 두 번째 커밋
-			  * 0c8e721 mybranch1의 첫 번째 커밋
-			  * 2ec7e32 (origin/master, master) 두 번째 커밋
-			  * b6e1657 첫 번째 커밋
-			  ===> 기존 커밋을 부모로 하는 새로운 커밋이 생성되었음을 알 수 있다.
-			  ===> HEAD는 mybranch1, mybranch1은 새 커밋을 각각 가리키는 것을 확인할 수 있다.
+		      * 0c8e721 mybranch1의 첫 번째 커밋
+		      * 2ec7e32 (origin/master, master) 두 번째 커밋
+		      * b6e1657 첫 번째 커밋
+		      ===> 기존 커밋을 부모로 하는 새로운 커밋이 생성되었음을 알 수 있다.
+		      ===> HEAD는 mybranch1, mybranch1은 새 커밋을 각각 가리키는 것을 확인할 수 있다.
 
 	 (mybranch1)$ git checkout master   # 마스터 브랜치 체크아웃
 		 ----> Switched to branch 'master'
-			   Your branch is up to date with 'origin/master'.
+			Your branch is up to date with 'origin/master'.
 
 	 (master)$ cat file1.txt   # 파일이 이전으로 돌아갔는지 확인
 		 ----> hello git
-			   second
+			second
 
 	 (master)$ git merge mybranch1   # 병합, Fast-forward
 		 ----> Updating 2ec7e32..ea16908
-			   Fast-forward
-			     file1.txt | 2 ++
-			     1 file changed, 2 insertions(+)
-			   ===> [master]브랜치에 [mybranch1]브랜치를 병합했다.
-			   ===> Fast-forward = 빨리 감기 병합
+			Fast-forward
+			  file1.txt | 2 ++
+			  1 file changed, 2 insertions(+)
+			===> [master]브랜치에 [mybranch1]브랜치를 병합했다.
+			===> Fast-forward = 빨리 감기 병합
 
 	 (master)$ git log --oneline --all --graph   # 로그 확인
 		 ----> * ea16908 (HEAD -> master, mybranch1) 두 번째 커밋
-			   * 0c8e721 mybranch1의 첫 번째 커밋
-			   * 2ec7e32 (origin/master) 두 번째 커밋
-			   * b6e1657 첫 번째 커밋
+			* 0c8e721 mybranch1의 첫 번째 커밋
+			* 2ec7e32 (origin/master) 두 번째 커밋
+			* b6e1657 첫 번째 커밋
 	 
 	 (master)$ cat file1.txt   # 파일 상태 재확인
 		 ----> hello git
-			   second
-			   third - my branch
-			   four - my branch
+			second
+			third - my branch
+			four - my branch
 	```
 
 #### 3) reset --hard로 브랜치 되돌리기
@@ -287,7 +287,7 @@
 
  $ git branch -d mybranch1   # 브랜치 삭제
 	 ----> Deleted branch mybranch1 (was ea16908).
-		   ===> 필요없어진 [mybranch1] 브랜치를 삭제.
+		===> 필요없어진 [mybranch1] 브랜치를 삭제.
 
  $ git log --oneline --all -n2   # 로그 확인
 	 ----> ea16908 (HEAD -> master, origin/master) 두 번째 커밋
@@ -395,30 +395,30 @@
 
 	 $ git commit
 		 ----> [hotfix 209e069] hotfix 실습
-			      1 file changed, 1 insertion(+)
+			   1 file changed, 1 insertion(+)
 
 	 $ git log --oneline -n1
 		 ----> 	209e069 (**HEAD ->** **hotfix**) hotfix 실습
 
 	 $ git checkout master
 	 ----> Switched to branch 'master'
-		   Your branch is up to date with 'origin/master'.
+		Your branch is up to date with 'origin/master'.
 
 	 $ git merge hotfix   # 빨리 감기 병합
 		 ----> Updating ea16908..209e069
-			   Fast-forward
-			      file1.txt | 1 +
-			      1 file changed, 1 insertion(+)
+			Fast-forward
+			   file1.txt | 1 +
+			   1 file changed, 1 insertion(+)
 
 	 $ git push   # 원격저장소로 push
 		 ----> Enumerating objects: 5, done.
-			   Counting objects: 100% (5/5), done.
-			   Delta compression using up to 12 threads
-			   Compressing objects: 100% (2/2), done.
-			   Writing objects: 100% (3/3), 309 bytes | 309.00 KiB/s, done.
-			   Total 3 (delta 0), reused 0 (delta 0)
-			   To https://github.com/EunJaePark/hello-git-cli.git
-			       ea16908..209e069  master -> master
+			Counting objects: 100% (5/5), done.
+			Delta compression using up to 12 threads
+			Compressing objects: 100% (2/2), done.
+			Writing objects: 100% (3/3), 309 bytes | 309.00 KiB/s, done.
+			Total 3 (delta 0), reused 0 (delta 0)
+			To https://github.com/EunJaePark/hello-git-cli.git
+			    ea16908..209e069  master -> master
 	```
 	- 위의 버그 수정 사항을 현재 개발 중인 [feature1] 브랜치에도 반영해줘야 한다.
 	
@@ -440,32 +440,32 @@
 
  $ git log --oneline --all   # 로그 확인
 	 ----> 209e069 (**origin/master**, **master**, **hotfix**) hotfix 실습
-		   c259819 (**HEAD ->** **feature1**) 새로운 기능 1 추가
-		   ea16908 (**tag: v0.1**) 두 번째 커밋
-		   0c8e721 mybranch1의 첫 번째 커밋
-		   2ec7e32 두 번째 커밋
-		   b6e1657 첫 번째 커밋
+		c259819 (**HEAD ->** **feature1**) 새로운 기능 1 추가
+		ea16908 (**tag: v0.1**) 두 번째 커밋
+		0c8e721 mybranch1의 첫 번째 커밋
+		2ec7e32 두 번째 커밋
+		b6e1657 첫 번째 커밋
 
  $ git merge master   # master 브랜치와 병합 시도
 	 ----> Auto-merging file1.txt
-		   CONFLICT (content): Merge conflict in file1.txt
-		   Automatic merge failed; fix conflicts and then commit the result.
-		   ===> git merge master 명령이 충돌로 인해 실패했다.
+		CONFLICT (content): Merge conflict in file1.txt
+		Automatic merge failed; fix conflicts and then commit the result.
+		===> git merge master 명령이 충돌로 인해 실패했다.
 
  $ git status   # 실패 원인 파악하기
 	 ----> On branch feature1
-		   You have unmerged paths.
-		       (fix conflicts and run "git commit")
-		       (use "git merge --abort" to abort the merge)
+		You have unmerged paths.
+		    (fix conflicts and run "git commit")
+		    (use "git merge --abort" to abort the merge)
 
-		 Unmerged paths:
-		       (use "git add <file>..." to mark resolution)
+	        Unmerged paths:
+		    (use "git add <file>..." to mark resolution)
 
-		             both modified: file1.txt
+		         both modified: file1.txt
 
-		 no changes added to commit (use "git add" and/or "git commit -a")
-		 ===> 충돌 대상 파일을 확인.
-		 ===> 결과 메시지에서 볼 수 있는 것처럼 git merge --abort 명령을 통해 merge를 취소할 수도 있다.
+		no changes added to commit (use "git add" and/or "git commit -a")
+		===> 충돌 대상 파일을 확인.
+		===> 결과 메시지에서 볼 수 있는 것처럼 git merge --abort 명령을 통해 merge를 취소할 수도 있다.
 ```
 - VSCode에서 충돌이 일어난 파일을 열어 [두 변경 사항 모두 수락]을 눌러 수정해준다.
 - 수정 내용을 저장하고 다시 스테이지에 추가 및 커밋을 하면 수동 3-way 병합이 완료된다.
@@ -475,36 +475,36 @@
 ```
  $ cat file1.txt   # 최종 변경 내용 확인
 	 ----> hello git
-		   second
-		   third - my branch
-		    four - my branch
-		  기능 1 추가
-		   some hot fix
+		second
+		third - my branch
+		four - my branch
+		기능 1 추가
+		some hot fix
 
  $ git add file1.txt   # 스테이징
 
  $ git status
 	 ----> On branch feature1
-		   All conflicts fixed but you are still merging.
-		       (use "git commit" to conclude merge)
+	       All conflicts fixed but you are still merging.
+		  (use "git commit" to conclude merge)
 
-		   Changes to be committed:
+	       Changes to be committed:
 
-		              modified: file1.txt
-		   ===> git add 및 git status를 수행하면 충돌한 파일의 수정을 완료한 후에 git commit 명령을 수행하면 된다는 것을 알 수 있다.
+		          modified: file1.txt
+	       ===> git add 및 git status를 수행하면 충돌한 파일의 수정을 완료한 후에 git commit 명령을 수행하면 된다는 것을 알 수 있다.
   
  $ git commit   # 머지 커밋 생성
 	 ----> [feature1 231f9c7] Merge branch 'master' into feature1
 
  $ git log --oneline --all --graph -n4   # 로그 확인
 	 ----> * 231f9c7 (**HEAD ->** **feature1**) Merge branch 'master' into feature1
-		   |\
-		   | * 209e069 (**origin/master**, **master**, **hotfix**) hotfix 실습
-		   * |  c259819 새로운 기능 1 추가
-		   |/
-		   * ea16908 (**tag: v0.1**) 두 번째 커밋
-		   ===> git commit 명령으로 충돌난 3way 병합을 마무리 짓는다. 
-		   ===> 병합 커밋이므로 커밋 메시지는 굳이 편집하지 않고 저장 후 에디터를 빠져 나오면 된다.
+	       |\
+	       | * 209e069 (**origin/master**, **master**, **hotfix**) hotfix 실습
+	       * |  c259819 새로운 기능 1 추가
+	       |/
+	       * ea16908 (**tag: v0.1**) 두 번째 커밋
+	       ===> git commit 명령으로 충돌난 3way 병합을 마무리 짓는다. 
+	       ===> 병합 커밋이므로 커밋 메시지는 굳이 편집하지 않고 저장 후 에디터를 빠져 나오면 된다.
 ```
 
 <br/>
