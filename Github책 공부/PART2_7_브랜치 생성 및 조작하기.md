@@ -1,3 +1,4 @@
+
 ### 01. CLI로 브랜치 생성하기
 #### 1) branch 되돌아 보기
 - HEAD : 현재 작업중인 브랜치
@@ -401,8 +402,8 @@
 		 ----> 	209e069 (**HEAD ->** **hotfix**) hotfix 실습
 
 	 $ git checkout master
-	 ----> Switched to branch 'master'
-		Your branch is up to date with 'origin/master'.
+	 	----> Switched to branch 'master'
+		      Your branch is up to date with 'origin/master'.
 
 	 $ git merge hotfix   # 빨리 감기 병합
 		 ----> Updating ea16908..209e069
@@ -511,4 +512,305 @@
 
 ### 04. CLI로 rebase 해 보기
 #### 1) rebase 사용하기
-- 
+- rebase의 원리
+	1. HEAD와 대상 브랜치의 공통 조상을 찾는다.
+	2. 공통 조상 이후에 생성한 커밋들을 대상 브랜치 뒤로 재배치한다.
+
+- rebase 명령어는 주로 로컬 브랜치를 깔끔하게 정리하고 싶을 때 사용.
+- rebase 명령을 실행하면 대상 브랜치 뒤로 재배치된 커밋들은 rebase전의 커밋과 다르다고 보면 된다.(내용물은 같지만 다른 존재라고 생각하면 됨)
+
+- 원격저장소에 존재하는 브랜치에 대해서는 rebase를 하지 않는 것이 좋다.
+
+- reset --hard 및 rebase 시도
+	```
+	eunjaeui-MacBookPro:hello-git-cli eunjae$ git checkout feature1   # HEAD를 feature1으로 전환. 이미 HEAD일 경우 생략 가능
+		---> Already on 'feature1'
+
+	eunjaeui-MacBookPro:hello-git-cli eunjae$ git reset --hard HEAD~   # 현재 브랜치를 한 단계 되돌린다
+		---> HEAD is now at c259819 새로운 기능 1 추가
+		     ===> 병합 커밋이 사라졌다.
+
+	eunjaeui-MacBookPro:hello-git-cli eunjae$ git log --oneline --graph --all -n3   # 로그 확인
+		---> * 209e069 (origin/master, master, hotfix) hotfix 실습
+		     | * c259819 (HEAD -> feature1) 새로운 기능 1 추가
+		     |/
+		     * ea16908 (tag: v0.1) 두 번째 커밋
+		     ===> 재배치 대상 커밋의 체크섬 값이 'c259819'라는 것을 알 수 있다.
+
+	eunjaeui-MacBookPro:hello-git-cli eunjae$ git rebase master   # HEAD 브랜치의 커밋들을 master로 재배치
+		   ---> First, rewinding head to replay your work on top of it...
+			Applying: 새로운 기능 1 추가
+			Using index info to reconstruct a base tree...
+			M  file1.txt
+			Falling back to patching base and 3-way merge...
+			Auto-merging file1.txt
+			CONFLICT (content): Merge conflict in file1.txt
+			error: Failed to merge in the changes.
+			Patch failed at 0001 새로운 기능 1 추가
+			hint: Use 'git am --show-current-patch' to see the failed patch
+
+			Resolve all conflicts manually, mark them as resolved with
+			"git add/rm <conflicted_files>", then run "git rebase --continue".
+			You can instead skip this commit: run "git rebase --skip".
+			To abort and get back to the state before "git rebase", run "git rebase --abort". 
+			===> merge에서와 마찬가지로 충돌로 인해 rebase가 실패했다. 
+			===> 실패 메시지를 보면 수동으로 충돌을 해결한 후에 스테이지에 추가할 것을 알려준다.
+			===> 그러고 난후 git rebase --continue 명령을 수행하라는 것도 알려준다.
+
+	eunjaeui-MacBookPro:hello-git-cli eunjae$ git push   # 원격에 push
+		   ---> fatal: You are not currently on a branch.
+			To push the history leading to the current (detached HEAD)
+			state now, use
+
+				git push origin HEAD:<name-of-remote-branch>
+	```
+	- 따라서, 충돌을 해결하고 다시 rebase를 해보자.
+
+- 충돌 해결 및 rebase 이어서 하기
+	```
+	$ git status   # 충돌 대상 확인 및 수동으로 충돌 해결
+		   ---> rebase in progress; onto 209e069
+			You are currently rebasing branch 'feature1' on '209e069'.
+				(fix conflicts and then run "git rebase --continue")
+				(use "git rebase --skip" to skip this patch)
+				(use "git rebase --abort" to check out the original branch)
+
+			Unmerged paths:
+				(use "git reset HEAD <file>..." to unstage)
+				(use "git add <file>..." to mark resolution)
+
+						both modified: file1.txt
+
+			no changes added to commit (use "git add" and/or "git commit -a")
+			===> 충돌 파일을 확인하고 VSCode를 이용해서 수동으로 내용을 수정하고 저장.
+			
+
+	$ git add file1.txt   # 변경사항 스테이징 및 상태 확인
+
+	$ git status
+		   ---> rebase in progress; onto 209e069
+			You are currently rebasing branch 'feature1' on '209e069'.
+				(all conflicts fixed: run "git rebase --continue")
+
+			Changes to be committed:
+				(use "git reset HEAD <file>..." to unstage)
+
+						modified: file1.txt
+
+	$ git rebase --continue   # 리베이스 계속 진행
+		   ---> Applying: 새로운 기능 1 추가
+			===> merge는 마지막 단계에서 git commit 명령을 사용하지만, rebase는 git rebase --contivue 명령을 사용한다는 것에 주의하자.
+	
+	$ git log --oneline --graph --all -n2   # 로그 확인
+		   ---> * 6cea07b (HEAD -> feature1) 새로운 기능 1 추가
+			* 209e069 (origin/master, master, hotfix) hotfix 실습
+			===> merge와는 달리 병합 커밋도 없고 히스토리도 한 줄로 깔끔해졌다.
+			===> [feature1] 브랜치가 가리키는 커밋의 체크섬 값이 '6cea07b'로 바뀐 것을 볼 수 있다. (리베이스를 하면 커밋 객체가 바뀌기 때문)
+
+	$ git checkout master
+		   ---> Switched to branch 'master'
+			Your branch is up to date with 'origin/master'.
+	
+	$ git merge feature1   # 빨리 감기 병합
+		   ---> Updating 209e069..6cea07b
+			Fast-forward
+				file1.txt | 4 ++++
+				1 file changed, 4 insertions(+)
+			===> [master] 브랜치에서 [feature1] 브랜치로 병합한다. 
+			===> 한 줄이 되었기 때문에 빨리 감기 병합을 수행한다.
+	```
+
+- 3-way 병합은 기존 커밋의 변경 없이 새로운 병합 커밋을 하나 생성한다. 따라서 충돌도 한 번만 발생한다. 충돌 수정 완료 후 git commit 명령을 수행하면 merge 작업이 완료되는 것이다.
+- rebase는 재배치 대상 커밋이 여러 개일 경우 여러번 충돌이 발생할 수 있다. 또한 기존 커밋을 하나씩 단계별로 수정하기 때문에 git rebase --continue 명령으로 충돌로 인해 중단된 rebase를 재개하게 된다. 
+	- 따라서 여러 커밋에 충돌이 발생했다면 충돌을 해결할 때마다 git rebase --continue 명령을 매번 입력해야 한다. 
+	- 복잡해지고 귀찮기 때문에 이런 경우에는 병합을 수행하는 것이 더 간단할 수 있다.
+
+|  | 3-way 병합 | rebase |
+| - | ----------| ------ |
+| 특징 | 머지 커밋 생성 | 현재 커밋들을 수정하면서 대상 브랜치 위로 재배치함 |
+| 장점 | 한 번만 충돌 발생 | 깔끔한 히스토리 |
+| 단점 | 트리가 약간 지저분해짐 | 여러 번 충돌이 발생할 수 있음 |
+<br/>
+
+**<merge(3-way병합)>**
+```
+C0  ← C1 ← C4
+ ↖ C2 ← C3 ↙
+ 
+ C4에서 한 번의 충돌 발생.
+   ```   
+
+**<rebase(재결합)>**
+```
+C0  ← C1 ← C2' ← C3'
+⇡ 
+C2 ⇠ C3
+
+ C2'와 C3'에서 충돌 발생.
+ 기존의 C2와 C3커밋은 C2'와 C3'로 바뀜.
+```
+
+
+#### 2) 유용한 rebase의 사용법 : 뻗어나온 가지 없애기
+- 불필요하게 병합 커밋이 생긴 상황을 깔끔하게 정리해보자.
+	- reset --hard로 병합 커밋을 되돌리고 rebase를 사용하면 된다.
+	- 불필요한 가지 커밋을 만들고 없애는 실습을 해보자.
+
+- 보통 커밋 만들기
+	```
+	$ echo "master1" > master1.txt   # master1.txt  파일 생성
+
+	$ git add master1.txt   # 스테이지에 추가
+
+	$ git commit -m "master 커밋 1"   # 커밋
+		---> [master d7efba2] master 커밋 1
+			2 files changed, 1 insertion(+), 3 deletions(-)
+			create mode 100644 master1.txt
+
+	$ git push origin master   # 푸시
+		   ---> Enumerating objects: 9, done.
+			Counting objects: 100% (9/9), done.
+			Delta compression using up to 12 threads
+			Compressing objects: 100% (5/5), done.
+			Writing objects: 100% (7/7), 727 bytes | 727.00 KiB/s, done.
+			Total 7 (delta 0), reused 0 (delta 0)
+			To https://github.com/EunJaePark/hello-git-cli.git
+				209e069..d7efba2  master -> master
+
+	$ git log --oneline -n1   # 로그 확인
+		---> d7efba2 (HEAD -> master, origin/master) master 커밋 1
+
+	$ ls   # 작업 디렉토리 상태 확인
+		---> file1.txt  master1.txt
+	```
+	- 평범하게 커밋을 하나 생성했다.
+	- 이제 reset --hard를 이용해서 한 단계 이전 커밋으로 가서 다시 커밋을 생성하면 가지가 하나 생겨날 것이다.
+
+- 가지 커밋 만들기
+	```
+	$ git reset --hard HEAD~   # HEAD를 한 단계 되돌리기
+		---> HEAD is now at 6cea07b 새로운 기능 1 추가
+		     ===> hard reset을 이용해서 [master] 브랜치를 한 단계 되돌렸다.
+
+	$ echo "master2" > master2.txt   # master2.txt 파일 생성
+
+	$ git add .   # 스테이지에 추가
+
+	$ git commit -m "master2 커밋"   # 커밋
+		---> [master f02fe18] master2 커밋
+			1 file changed, 1 insertion(+)
+			create mode 100644 master2.txt
+		      ===> master2.txt 파일을 생성하고 커밋.
+
+	$ git log --oneline --graph --all -n3   # 로그 확인
+		---> * f02fe18 (HEAD -> master) master2 커밋
+		     | * d7efba2 (origin/master) master 커밋 1
+		     |/
+		     * 6cea07b (feature1) 새로운 기능 1 추가
+		     ===> master1 커밋과 master2 커밋 모두 '6cea07b'커밋을 부모로 하는 커밋이다.
+		     ===> 따라서, 그래프에서 가지가 생긴 것을 확인할 수 있다.
+	```
+	- 현재 상황에서 git pull을 하면 가지를 병합하기 위해서 병합 커밋이 생기고 커밋 히스토리가 지저분해질 것이다.
+	-  git pull = git fetch + git merge 이기 때문.
+
+- git pull 수행 결과
+	```
+	$ git pull   # git pull 수행, 머지 메시지 창은 그냥 닫으면 된다.
+		   ---> Merge made by the 'recursive' strategy.
+			file1.txt | 3 ---
+			master1.txt | 1 +
+			2 files changed, 1 insertion(+), 3 deletions(-)
+			create mode 100644 master1.txt
+			===> git pull 명령을 수행하면 자동으로 병합 커밋이 생성된다.
+			===> 병합 커밋 생성 시 에디터가 뜨는데 그냥 닫으면 된다.
+
+	$ git log --oneline --graph --all -n4   # 병합 커밋 생성 확인
+		    ---> * ffcbc77 (HEAD -> master) Merge branch 'master' of https://github.com/EunJaePark/hello-git-cli
+			 |\
+			 | * d7efba2 (origin/master) master 커밋 1
+			 * |  f02fe18 master2 커밋
+			 |/
+			 * 6cea07b (feature1) 새로운 기능 1 추가
+			 ===> 병합 커밋이 생성된 것을 알 수 있다.
+	```
+	- 이제 병합 커밋을 되돌린 후 rebase로 가지를 없애보자.
+
+- rebase로 가지 없애기
+	```
+	$ git reset --hard HEAD~	# 병합 커밋 되돌리기
+		---> HEAD is now at f02fe18 master2 커밋
+		     ===> 마지막 커밋이 병합 커밋이었으므로 병합되기 전 커밋으로 돌아가게 된다. 
+
+	$ git rebase origin/master   # rebase 수행으로 현재 커밋 재배치
+		---> First, rewinding head to replay your work on top of it...
+		     Applying: master2 커밋
+		     ===> 로컬 [master] 브랜치의 가지 커밋이 [origin/master] 브랜치 위로 재배치 된다.
+
+	$ git log --oneline --all --graph -n3   # 로그 확인
+		---> * f1ad3e2 (HEAD -> master) master2 커밋
+		     * d7efba2 (origin/master) master 커밋 1
+		     * 6cea07b (feature1) 새로운 기능 1 추가
+
+	$ git push   # push
+		---> Enumerating objects: 4, done.
+		     Counting objects: 100% (4/4), done.
+		     Delta compression using up to 12 threads
+		     Compressing objects: 100% (2/2), done.
+		     Writing objects: 100% (3/3), 326 bytes | 326.00 KiB/s, done.
+		     Total 3 (delta 0), reused 0 (delta 0)
+		     To https://github.com/EunJaePark/hello-git-cli.git
+			d7efba2..f1ad3e2  master -> master
+		     ===> 로그를 확인하고 origin에 푸시했다.
+	```
+	- 이전에 튀어나와있던 가지가 사라졌다!
+
+#### 3) rebase 주의사항
+- 원격저장소에 푸시한 브랜치는 rebase하지 않는 것이 원칙!
+- 따라서, rebase와 git의 동작 원리를 잘 이해하기 전까지는 로컬저장소의 브랜치에만 적용하기를 권장한다.
+
+#### 4) 임시 브랜치 사용하기
+- 원래 작업하려던 브랜치의 커밋으로 임시 브랜치를 만들고 나면 해당 브랜치에서는 아무 작업이나 막 해도 전혀 상관없다.(데이터 손실 걱정 없음!)
+	- 나중에 그 브랜치를 삭제하기만 하면 모든 내용이 원상복구 된다.
+	- 임시 브랜치가 필요 없어지는 시점에 CLI에서 `git branch -D <브랜치 이름>` 명령으로 삭제할 수 있다.
+
+- 임시 브랜치 생성 사용 및 삭제
+	```
+	$ git branch test feature1   # feature1 브랜치에서 임시 브랜치 생성
+	
+	$ git checkout test   # test 브랜치 체크아웃
+		---> Switched to branch 'test'
+
+	$ echo "아무말 대잔치" > text.txt
+
+	$ git add .
+
+	$ git commit -m "임시 커밋"   # 새로운 커밋 생성
+		---> [test c17c01a] 임시 커밋
+		     1 file changed, 1 insertion(+)
+		     create mode 100644 text.txt
+
+	$ git log --oneline --graph --all -n4   # 커밋 로그 보기
+		---> * c17c01a (HEAD -> test) 임시 커밋
+		     | * f1ad3e2 (origin/master, master) master2 커밋
+		     | * d7efba2 master 커밋 1
+		     |/
+		     * 6cea07b (**feature1**) 새로운 기능 1 추가
+
+	$ git checkout master
+		---> Switched to branch 'master'
+		     Your branch is up to date with 'origin/master'.
+
+	$ git branch -D test   # 임시 브랜치 삭제	
+		---> Deleted branch test (was c17c01a).
+
+	$ git log --oneline --graph --all -n3   # 로그 확인
+		---> * f1ad3e2 (HEAD -> master, origin/master) master2 커밋
+		     * d7efba2 master 커밋 1
+		     * 6cea07b (**feature1**) 새로운 기능 1 추가
+	```
+	- 임시 브랜치인 [test] 브랜치를 생성하고 커밋한 후에 다시 [master] 브랜치로 돌아가서 [text] 브랜치를 삭제한 것이다.
+	- 최종적으로는 아무 작업도 남지 않았음을 볼 수 있다.
+	
+- commit, merge, rebase 등 다양한 작업을 미리 테스트해 보고 싶을 때 간단하게 임시 브랜치를 만들어서 사용하고 불필요해지면 삭제하는 것은 좋은 Git 활용 팁이다.
+		
+
