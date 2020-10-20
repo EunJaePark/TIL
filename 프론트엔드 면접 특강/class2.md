@@ -482,5 +482,5 @@ for (var  k  =  0; k  <  3; k++) {
 	}
 }
 ```
-![디버거 실행 이미지](./src/debugger.png)
+![디버거 실행 이미지](./imgs/debugger.png)
 
