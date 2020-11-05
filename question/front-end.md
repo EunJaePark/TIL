@@ -47,4 +47,4 @@
 - 렌더러는 DOM 요소에 부합하지만 1:1로 대응하는 관계는 아니다. 예를 들어, `head`요소와 같은 비시각적 DOM 요소는 렌더트리에 추가되지 않는다. 또한 `display`속성에 `none`값이 할달된 요소는 트리에 나타나지 않는다.(`visibility`속성에 `hidden`값이 할당된 요소는 트리에 나타남)
 
 #### 참고
-- [Naver D2 - 브라우저의 작동 원리](http://d2.naver.com/helloworld/59361)](https://d2.naver.com/helloworld/59361)
+- [Naver D2 - 브라우저의 작동 원리](http://d2.naver.com/helloworld/59361)
