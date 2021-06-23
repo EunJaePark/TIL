@@ -20,7 +20,7 @@
     $ git rebase --abort
     ```
     
-    > `$ git reset --hard origin/feat/license`를 해주면 마지막으로 push했던 부분으로 해당 브랜치가 리셋된다. 
+    > `$ git reset --hard origin/feat/license`를 해주면 마지막으로 원격브랜치에 push했던 부분으로 해당 브랜치가 리셋된다. 
 
 - `conflict`이 발생한 내용들을 수정해준 후, staging해준다. 
     ```
