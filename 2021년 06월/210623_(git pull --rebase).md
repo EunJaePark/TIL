@@ -1,3 +1,8 @@
+## `merge` & `rebase`
+merge와 rebase 모두 설정한 브랜치를 따라간다. 
+
+차이점이 있다면 `merge`는 결과만 가지고 충돌을 해결하고, `rebase`는 변경된 순서를 따라 순서대로 충돌을 해결하게 된다.
+
 ## `git pull --rebase`
 
 - `git pull --rebase` 명령어를 이용해 리베이스하려 했으나 아래와 같은 오류가 날 경우 `--abort`를 해준 후 다시 rebase를 해준다.
