@@ -1,3 +1,5 @@
+### 1. JavaScript로 Byte 변환하기
+
 ```typescript
 function formatBytes(bytes, decimals = 2) {
     if (bytes === 0) return '0 Bytes';
@@ -38,3 +40,16 @@ Math.log() 함수는 자연로그를 취한 값을 반환하며 이 함수를 �
 ***
 
 https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
+
+<br/>
+
+
+***
+***
+
+### 2. `0 / 0 = NaN` (JavaScript)
+
+- https://stackoverflow.com/questions/18838301/in-javascript-why-does-zero-divided-by-zero-return-nan-but-any-other-divided-b
+- https://bekusib.tistory.com/70
+
+
